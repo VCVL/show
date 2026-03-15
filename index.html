@@ -151,6 +151,73 @@ header{
 .start-info{
   display:flex;gap:30px;flex-wrap:wrap;justify-content:center;
 }
+
+/* ─── GROUP NAME INPUTS ─── */
+.nomes-grupos{
+  display:flex;flex-direction:column;gap:10px;
+  width:100%;max-width:380px;
+}
+.nomes-grupos-title{
+  font-family:'Orbitron',monospace;
+  font-size:12px;color:var(--accent);
+  letter-spacing:3px;text-transform:uppercase;
+  text-align:center;margin-bottom:4px;
+}
+.qtd-selector{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-bottom:6px;
+}
+.qtd-label{
+  font-family:'Orbitron',monospace;
+  font-size:11px;color:#7fa8cc;
+  letter-spacing:2px;text-transform:uppercase;
+}
+.qtd-btns{display:flex;gap:6px;}
+.qtd-btn{
+  width:36px;height:36px;
+  font-family:'Orbitron',monospace;
+  font-size:14px;font-weight:700;
+  border:1px solid #1e4a7a;
+  border-radius:8px;
+  background:#071020;
+  color:#7fa8cc;
+  cursor:pointer;
+  transition:all .2s;
+}
+.qtd-btn:hover{border-color:var(--accent);color:#fff;}
+.qtd-btn.ativo{
+  border-color:var(--gold);
+  background:#1a2a00;
+  color:var(--gold);
+  box-shadow:0 0 8px #ffd70044;
+}
+.nome-input-wrap{
+  display:flex;align-items:center;gap:10px;
+}
+.nome-num{
+  font-family:'Orbitron',monospace;
+  font-size:12px;color:var(--gold);
+  min-width:22px;text-align:right;
+  text-shadow:var(--glow-gold);
+}
+.nome-input{
+  flex:1;
+  background:#071020;
+  border:1px solid #1e4a7a;
+  border-radius:8px;
+  padding:10px 14px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:15px;font-weight:600;
+  color:#dceeff;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.nome-input::placeholder{color:#2a5a8a;}
+.nome-input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 8px #00c6ff44;
+}
+
 .info-card{
   background:linear-gradient(135deg,#0a2035,#071528);
   border:1px solid #1e4a7a;
@@ -397,6 +464,97 @@ header{
   text-shadow:0 0 8px #00e67666;
 }
 
+/* ─── EMPATE / SORTEIO ─── */
+.empate-aviso{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(13px,2vw,17px);
+  color:#ffdd44;
+  text-shadow:0 0 10px #ffdd4488;
+  letter-spacing:2px;
+  text-align:center;
+  margin-top:-10px;
+}
+.empate-nomes{
+  display:flex;gap:12px;flex-wrap:wrap;justify-content:center;
+  margin-top:4px;
+}
+.empate-tag{
+  background:#1a2a00;
+  border:1px solid var(--gold);
+  border-radius:8px;
+  padding:8px 18px;
+  font-family:'Orbitron',monospace;
+  font-size:14px;
+  color:var(--gold);
+  box-shadow:0 0 8px #ffd70033;
+}
+.btn-sortear{
+  position:relative;
+  padding:14px 44px;
+  font-family:'Orbitron',monospace;
+  font-size:clamp(13px,2vw,17px);
+  font-weight:900;
+  letter-spacing:2px;
+  border:2px solid var(--accent);
+  border-radius:50px;
+  background:linear-gradient(135deg,#001a2e,#003050);
+  color:var(--accent);
+  cursor:pointer;
+  text-transform:uppercase;
+  box-shadow:0 0 16px #00c6ff44;
+  transition:all .25s ease;
+  overflow:hidden;
+}
+.btn-sortear:hover{
+  box-shadow:0 0 32px #00c6ffaa;
+  transform:scale(1.05);
+}
+.btn-sortear:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+/* roleta */
+#roletaWrap{
+  display:none;
+  flex-direction:column;align-items:center;gap:16px;
+  width:100%;max-width:420px;
+}
+.roleta-display{
+  width:100%;
+  background:#071020;
+  border:2px solid var(--accent);
+  border-radius:14px;
+  padding:20px 10px;
+  text-align:center;
+  box-shadow:0 0 20px #00c6ff33;
+  min-height:80px;
+  display:flex;align-items:center;justify-content:center;
+}
+.roleta-nome{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(18px,3vw,28px);
+  color:#fff;
+  text-shadow:0 0 12px #00c6ffcc;
+  letter-spacing:2px;
+  transition:color .05s;
+}
+.roleta-nome.destaque{
+  color:var(--gold);
+  text-shadow:var(--glow-gold);
+  animation:pulse-text .3s ease infinite alternate;
+}
+@keyframes pulse-text{
+  0%{transform:scale(1);}
+  100%{transform:scale(1.06);}
+}
+.vencedor-final{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(15px,2.5vw,22px);
+  color:var(--green);
+  text-shadow:0 0 16px #00e676aa;
+  text-align:center;
+  letter-spacing:2px;
+  display:none;
+}
+
 /* ─── TEMPO ACABOU ─── */
 #tempoAcabou{
   display:none;
@@ -441,7 +599,7 @@ header{
 
 <header>
   <div class="header-title">🌍 Jogo do Milhão</div>
-  <div class="header-sub">Métodos Geofísicos Aplicados à Mineração</div>
+  <div class="header-sub">Geofísica &amp; Exploração Mineral</div>
 </header>
 
 <div id="startScreen">
@@ -452,9 +610,23 @@ header{
   </div>
   <div class="start-info">
     <div class="info-card"><div class="num">30</div><div class="lbl">Perguntas</div></div>
-    <div class="info-card"><div class="num">5</div><div class="lbl">Grupos</div></div>
+    <div class="info-card"><div class="num" id="cardGrupos">5</div><div class="lbl">Grupos</div></div>
     <div class="info-card"><div class="num">30s</div><div class="lbl">Por questão</div></div>
     <div class="info-card"><div class="num">R$5k</div><div class="lbl">Por acerto</div></div>
+  </div>
+  <div class="nomes-grupos">
+    <div class="nomes-grupos-title">👥 Configurar Grupos</div>
+    <div class="qtd-selector">
+      <span class="qtd-label">Quantidade:</span>
+      <div class="qtd-btns" id="qtdBtns">
+        <button class="qtd-btn" onclick="definirQtd(2)">2</button>
+        <button class="qtd-btn" onclick="definirQtd(3)">3</button>
+        <button class="qtd-btn" onclick="definirQtd(4)">4</button>
+        <button class="qtd-btn" onclick="definirQtd(5)">5</button>
+        <button class="qtd-btn" onclick="definirQtd(6)">6</button>
+      </div>
+    </div>
+    <div id="nomesContainer"></div>
   </div>
   <button class="btn-start" onclick="iniciarJogo()">▶ INICIAR JOGO</button>
 </div>
@@ -489,6 +661,16 @@ header{
   <div class="ranking-wrap">
     <div class="ranking-title">🏆 Ranking Final</div>
     <div id="rankingList"></div>
+    <!-- empate -->
+    <div id="empateArea" style="display:none;flex-direction:column;align-items:center;gap:14px;width:100%;max-width:420px;">
+      <div class="empate-aviso">⚖️ EMPATE NA PRIMEIRA COLOCAÇÃO!</div>
+      <div class="empate-nomes" id="empateNomes"></div>
+      <button class="btn-sortear" id="btnSortear" onclick="iniciarSorteio()">🎲 SORTEAR VENCEDOR</button>
+      <div id="roletaWrap">
+        <div class="roleta-display"><div class="roleta-nome" id="roletaNome">...</div></div>
+        <div class="vencedor-final" id="vencedorFinal"></div>
+      </div>
+    </div>
     <button class="btn-start" onclick="location.reload()" style="font-size:14px;padding:14px 40px;">↺ JOGAR NOVAMENTE</button>
   </div>
 </div>
@@ -535,7 +717,32 @@ const perguntas=[
 ];
 
 const LABELS=['A','B','C','D'];
-let perguntaIndex=0,grupoAtual=0,pontuacao=[0,0,0,0,0],tempo=30,timer;
+let nomes=[];
+let qtdGrupos=5;
+let perguntaIndex=0,grupoAtual=0,pontuacao=[],tempo=30,timer;
+
+// ─── inicializa campos de nome ───
+function definirQtd(n){
+  qtdGrupos=n;
+  // highlight botão ativo
+  document.querySelectorAll('.qtd-btn').forEach(b=>{
+    b.classList.toggle('ativo', parseInt(b.textContent)===n);
+  });
+  // atualizar card de grupos
+  const card=document.getElementById('cardGrupos');
+  if(card) card.textContent=n;
+  // gerar inputs
+  const c=document.getElementById('nomesContainer');
+  c.innerHTML='';
+  for(let i=0;i<n;i++){
+    const wrap=document.createElement('div');
+    wrap.className='nome-input-wrap';
+    wrap.innerHTML=`<span class="nome-num">${i+1}</span><input class="nome-input" id="nome${i}" type="text" maxlength="20" placeholder="Nome do Grupo ${i+1}">`;
+    c.appendChild(wrap);
+  }
+}
+// começa com 5 por padrão
+definirQtd(5);
 
 const musica=document.getElementById("musicaFundo");
 const acerto=document.getElementById("somAcerto");
@@ -556,6 +763,13 @@ function flash(type){
 }
 
 function iniciarJogo(){
+  nomes=[];
+  pontuacao=[];
+  for(let i=0;i<qtdGrupos;i++){
+    const val=document.getElementById("nome"+i).value.trim();
+    nomes.push(val || "Grupo "+(i+1));
+    pontuacao.push(0);
+  }
   document.getElementById("startScreen").style.display="none";
   const g=document.getElementById("game");
   g.style.display="flex";
@@ -565,11 +779,11 @@ function iniciarJogo(){
 function atualizarGrupos(){
   const g=document.getElementById("grupos");
   g.innerHTML="";
-  document.getElementById("turnLabel").textContent="Grupo "+(grupoAtual+1);
+  document.getElementById("turnLabel").textContent=nomes[grupoAtual];
   pontuacao.forEach((p,i)=>{
     const div=document.createElement("div");
     div.className="grupo"+(i===grupoAtual?" ativo":"");
-    div.innerHTML=`<div class="grupo-dot"></div><span class="grupo-name">Grupo ${i+1}</span><span class="grupo-score">R$${p.toLocaleString()}</span>`;
+    div.innerHTML=`<div class="grupo-dot"></div><span class="grupo-name">${nomes[i]}</span><span class="grupo-score">R$${p.toLocaleString()}</span>`;
     g.appendChild(div);
   });
 }
@@ -578,17 +792,82 @@ function mostrarRanking(){
   document.getElementById("game").style.display="none";
   const rs=document.getElementById("rankingScreen");
   rs.style.display="flex";
-  const medals=['🥇','🥈','🥉','4º','5º'];
-  const sorted=pontuacao.map((p,i)=>({grupo:i+1,p})).sort((a,b)=>b.p-a.p);
+  const medals=['🥇','🥈','🥉','4º','5º','6º'];
+  const sorted=pontuacao.map((p,i)=>({nome:nomes[i],p})).sort((a,b)=>b.p-a.p);
   const list=document.getElementById("rankingList");
   list.innerHTML="";
   sorted.forEach((x,idx)=>{
     const div=document.createElement("div");
     div.className="ranking-item";
     div.style.animationDelay=(idx*0.1)+"s";
-    div.innerHTML=`<div class="rank-pos">${medals[idx]}</div><div class="rank-name">Grupo ${x.grupo}</div><div class="rank-val">R$ ${x.p.toLocaleString()}</div>`;
+    div.innerHTML=`<div class="rank-pos">${medals[idx]}</div><div class="rank-name">${x.nome}</div><div class="rank-val">R$ ${x.p.toLocaleString()}</div>`;
     list.appendChild(div);
   });
+
+  // detectar empate no 1º lugar
+  const maxPontos=sorted[0].p;
+  const empatados=sorted.filter(x=>x.p===maxPontos);
+  if(empatados.length>=2){
+    const ea=document.getElementById("empateArea");
+    ea.style.display="flex";
+    const en=document.getElementById("empateNomes");
+    en.innerHTML="";
+    empatados.forEach(x=>{
+      const tag=document.createElement("div");
+      tag.className="empate-tag";
+      tag.textContent=x.nome;
+      en.appendChild(tag);
+    });
+  }
+}
+
+function iniciarSorteio(){
+  const maxPontos=pontuacao.reduce((a,b)=>Math.max(a,b),0);
+  const empatados=nomes.filter((_,i)=>pontuacao[i]===maxPontos);
+
+  document.getElementById("btnSortear").disabled=true;
+  const roletaWrap=document.getElementById("roletaWrap");
+  const roletaNome=document.getElementById("roletaNome");
+  const vencedorFinal=document.getElementById("vencedorFinal");
+  roletaWrap.style.display="flex";
+  vencedorFinal.style.display="none";
+  roletaNome.className="roleta-nome";
+
+  // sortear vencedor antecipadamente
+  const vencedor=empatados[Math.floor(Math.random()*empatados.length)];
+
+  // animação: troca rápida por 5 segundos, desacelera no final
+  const duracaoTotal=5000;
+  const inicio=Date.now();
+  let idx=0;
+  let intervalo=80;
+
+  function passo(){
+    const decorrido=Date.now()-inicio;
+    const progresso=decorrido/duracaoTotal;
+
+    // mostra nome atual girando
+    roletaNome.textContent=empatados[idx%empatados.length];
+    idx++;
+
+    if(decorrido>=duracaoTotal){
+      // parar no vencedor
+      roletaNome.textContent=vencedor;
+      roletaNome.className="roleta-nome destaque";
+      setTimeout(()=>{
+        vencedorFinal.textContent="🏆 VENCEDOR: "+vencedor.toUpperCase()+" 🏆";
+        vencedorFinal.style.display="block";
+      },400);
+      return;
+    }
+
+    // desacelera progressivamente na reta final
+    if(progresso>0.7){
+      intervalo=80+Math.pow((progresso-0.7)/0.3,2)*600;
+    }
+    setTimeout(passo, intervalo);
+  }
+  passo();
 }
 
 function carregarPergunta(){
@@ -617,7 +896,7 @@ function carregarPergunta(){
       flash('red');
       setTimeout(()=>{
         ta.style.display="none";
-        grupoAtual=(grupoAtual+1)%5;
+        grupoAtual=(grupoAtual+1)%qtdGrupos;
         perguntaIndex++;
         carregarPergunta();
       },1800);
@@ -650,7 +929,7 @@ function carregarPergunta(){
       }
       atualizarGrupos();
       setTimeout(()=>{
-        grupoAtual=(grupoAtual+1)%5;
+        grupoAtual=(grupoAtual+1)%qtdGrupos;
         perguntaIndex++;
         carregarPergunta();
       },2200);
