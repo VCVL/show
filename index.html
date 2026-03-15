@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo do Milhão</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#ffd700;
+  --gold2:#ffb300;
+  --dark:#04111f;
+  --navy:#071e34;
+  --blue:#0a2d52;
+  --accent:#00c6ff;
+  --green:#00e676;
+  --red:#ff1744;
+  --glow-gold:0 0 14px #ffd70099,0 0 30px #ffd70044;
+  --glow-blue:0 0 12px #00c6ff88;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Rajdhani',sans-serif;
+  background:var(--dark);
+  color:#eaf0ff;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow-x:hidden;
+}
+
+/* ─── animated starfield bg ─── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, #0d2a4a 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, #001430 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+}
+.stars{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, #fff9 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 60%, #fff7 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 15%, #fffb 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 40%, #fff8 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 70%, #fff6 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 45% 85%, #fffc 0%, transparent 100%),
+    radial-gradient(1px 1px at 65% 55%, #fff9 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 90%, #fff7 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 10%, #fffb 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 50%, #fff5 0%, transparent 100%);
+  animation:twinkle 4s ease-in-out infinite alternate;
+}
+@keyframes twinkle{0%{opacity:.6}100%{opacity:1}}
+
+/* ─── HEADER ─── */
+header{
+  position:relative;z-index:10;
+  background:linear-gradient(90deg,var(--dark) 0%,#0b2540 50%,var(--dark) 100%);
+  border-bottom:2px solid var(--gold);
+  text-align:center;
+  padding:14px 20px;
+  box-shadow:0 4px 24px #ffd70033;
+}
+.header-title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(16px,3vw,24px);
+  color:var(--gold);
+  text-shadow:var(--glow-gold);
+  letter-spacing:4px;
+  text-transform:uppercase;
+}
+.header-sub{
+  font-size:11px;
+  color:#7fa8cc;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  margin-top:2px;
+}
+
+/* ─── START SCREEN ─── */
+#startScreen{
+  position:relative;z-index:5;
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:32px;
+  padding:40px 20px;
+}
+.logo-ring{
+  width:160px;height:160px;
+  border-radius:50%;
+  border:3px solid var(--gold);
+  box-shadow:var(--glow-gold),inset 0 0 40px #ffd70022;
+  display:flex;align-items:center;justify-content:center;
+  animation:pulse-ring 2.5s ease-in-out infinite;
+  background:radial-gradient(circle,#0d2a4a,#04111f);
+}
+.logo-ring span{font-size:64px;filter:drop-shadow(0 0 12px #ffd700);}
+@keyframes pulse-ring{
+  0%,100%{box-shadow:var(--glow-gold),inset 0 0 40px #ffd70022;}
+  50%{box-shadow:0 0 30px #ffd700cc,0 0 60px #ffd70066,inset 0 0 50px #ffd70033;}
+}
+.start-title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(28px,6vw,52px);
+  color:var(--gold);
+  text-shadow:var(--glow-gold);
+  text-align:center;
+  line-height:1.2;
+}
+.start-title span{
+  display:block;
+  font-size:clamp(14px,2.5vw,20px);
+  color:var(--accent);
+  letter-spacing:6px;
+  text-shadow:var(--glow-blue);
+  margin-top:6px;
+}
+.btn-start{
+  position:relative;
+  padding:18px 60px;
+  font-family:'Orbitron',monospace;
+  font-size:clamp(15px,2.5vw,20px);
+  font-weight:900;
+  letter-spacing:3px;
+  border:2px solid var(--gold);
+  border-radius:50px;
+  background:linear-gradient(135deg,#1a3a00 0%,#2d6a00 50%,#1a3a00 100%);
+  color:var(--gold);
+  cursor:pointer;
+  text-transform:uppercase;
+  box-shadow:0 0 20px #ffd70055,inset 0 0 20px #00000044;
+  transition:all .25s ease;
+  overflow:hidden;
+}
+.btn-start::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 0%,#ffd70022 50%,transparent 100%);
+  transform:translateX(-100%);
+  transition:transform .4s ease;
+}
+.btn-start:hover{
+  box-shadow:0 0 40px #ffd700aa,0 0 80px #ffd70033,inset 0 0 30px #00000066;
+  transform:scale(1.05);
+}
+.btn-start:hover::before{transform:translateX(100%);}
+
+.start-info{
+  display:flex;gap:30px;flex-wrap:wrap;justify-content:center;
+}
+.info-card{
+  background:linear-gradient(135deg,#0a2035,#071528);
+  border:1px solid #1e4a7a;
+  border-radius:12px;
+  padding:16px 24px;
+  text-align:center;
+  min-width:120px;
+}
+.info-card .num{
+  font-family:'Orbitron',monospace;
+  font-size:26px;color:var(--gold);
+  text-shadow:var(--glow-gold);
+}
+.info-card .lbl{font-size:12px;color:#7fa8cc;letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+
+/* ─── GAME LAYOUT ─── */
+#game{display:none;flex:1;position:relative;z-index:5;padding:16px;flex-direction:column;}
+#content{display:flex;gap:16px;align-items:flex-start;}
+
+/* ─── QUESTION AREA ─── */
+#pergunta-area{
+  flex:2;
+  background:linear-gradient(160deg,#071e34 0%,#041527 100%);
+  border:1px solid #1b4a7a;
+  border-radius:16px;
+  padding:24px;
+  box-shadow:0 8px 32px #00000066,inset 0 1px 0 #2a6aaa33;
+}
+.question-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;flex-wrap:wrap;gap:10px;
+}
+.q-number{
+  font-family:'Orbitron',monospace;
+  font-size:13px;color:var(--accent);
+  letter-spacing:2px;text-transform:uppercase;
+  border:1px solid var(--accent);
+  padding:4px 12px;border-radius:20px;
+  box-shadow:var(--glow-blue);
+}
+#timer{
+  font-family:'Orbitron',monospace;
+  font-size:14px;color:var(--gold);
+  background:#071020;
+  border:2px solid var(--gold);
+  border-radius:50px;
+  padding:6px 18px;
+  box-shadow:var(--glow-gold);
+  display:flex;align-items:center;gap:6px;
+}
+.timer-icon{animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#tempo{font-size:22px;font-weight:900;}
+#tempo.danger{color:var(--red);text-shadow:0 0 10px #ff1744aa;}
+
+/* progress bar */
+.progress-wrap{
+  height:4px;background:#0d1e30;border-radius:2px;margin-bottom:20px;
+  overflow:hidden;
+}
+.progress-bar{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent),var(--gold));
+  border-radius:2px;
+  transition:width .5s ease;
+  box-shadow:0 0 8px #00c6ff88;
+}
+
+.pergunta{
+  font-size:clamp(16px,2.2vw,20px);
+  font-weight:700;
+  line-height:1.5;
+  color:#dceeff;
+  margin-bottom:22px;
+  padding:16px;
+  background:#071020aa;
+  border-radius:10px;
+  border-left:3px solid var(--gold);
+}
+
+/* ─── OPTIONS ─── */
+.opcoes{display:flex;flex-direction:column;gap:10px;}
+.opcoes button{
+  position:relative;
+  width:100%;padding:14px 20px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:clamp(14px,1.8vw,17px);
+  font-weight:700;
+  text-align:left;
+  border:1px solid #1e4a7a;
+  border-radius:10px;
+  background:linear-gradient(90deg,#0a2240 0%,#071830 100%);
+  color:#c8dfff;
+  cursor:pointer;
+  transition:all .2s ease;
+  overflow:hidden;
+  letter-spacing:.5px;
+}
+.opcoes button::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:var(--accent);
+  transform:scaleY(0);transition:transform .2s ease;
+  transform-origin:bottom;
+}
+.opcoes button:hover{
+  border-color:var(--accent);
+  background:linear-gradient(90deg,#0d2f55 0%,#0a1e40 100%);
+  color:#fff;
+  box-shadow:0 0 14px #00c6ff44;
+  transform:translateX(3px);
+}
+.opcoes button:hover::before{transform:scaleY(1);}
+.opcoes button .alt-label{
+  display:inline-block;
+  width:28px;height:28px;
+  border-radius:6px;
+  background:#0d2a50;
+  border:1px solid #2060aa;
+  text-align:center;line-height:26px;
+  font-family:'Orbitron',monospace;
+  font-size:11px;color:var(--accent);
+  margin-right:12px;
+  flex-shrink:0;
+  vertical-align:middle;
+}
+.opcoes button.correct{
+  background:linear-gradient(90deg,#003d1a,#00612a)!important;
+  border-color:var(--green)!important;
+  color:#fff!important;
+  box-shadow:0 0 20px #00e67699!important;
+  transform:none!important;
+}
+.opcoes button.correct::before{background:var(--green)!important;transform:scaleY(1)!important;}
+.opcoes button.wrong{
+  background:linear-gradient(90deg,#3d0010,#610020)!important;
+  border-color:var(--red)!important;
+  color:#ffc0c8!important;
+  box-shadow:0 0 20px #ff174499!important;
+  transform:none!important;
+}
+.opcoes button.wrong::before{background:var(--red)!important;transform:scaleY(1)!important;}
+
+/* ─── SIDEBAR ─── */
+#sidebar{
+  flex:1;max-width:300px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.sidebar-card{
+  background:linear-gradient(160deg,#071e34,#041527);
+  border:1px solid #1b4a7a;
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 4px 16px #00000055;
+}
+.sidebar-title{
+  font-family:'Orbitron',monospace;
+  font-size:12px;
+  color:var(--accent);
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:14px;
+  border-bottom:1px solid #1b4a7a;
+  padding-bottom:8px;
+}
+.grupo{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;margin:6px 0;
+  background:#041020;
+  border:1px solid #152840;
+  border-radius:8px;
+  transition:all .3s ease;
+}
+.grupo.ativo{
+  background:linear-gradient(90deg,#1a3000,#2a5000);
+  border-color:var(--gold);
+  box-shadow:0 0 14px #ffd70044;
+  color:#fff;
+}
+.grupo-name{font-weight:700;font-size:15px;}
+.grupo.ativo .grupo-name{color:var(--gold);}
+.grupo-score{
+  font-family:'Orbitron',monospace;
+  font-size:13px;
+  color:#7fa8cc;
+}
+.grupo.ativo .grupo-score{color:var(--gold);text-shadow:var(--glow-gold);}
+.grupo-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#2a5a8a;margin-right:10px;flex-shrink:0;
+}
+.grupo.ativo .grupo-dot{background:var(--gold);box-shadow:0 0 6px var(--gold);}
+
+/* ─── TURN INDICATOR ─── */
+.turn-badge{
+  text-align:center;padding:10px;
+  background:#071020;border-radius:8px;
+  border:1px solid #1e4a7a;
+}
+.turn-label{font-size:11px;color:#5a8ab0;letter-spacing:2px;text-transform:uppercase;}
+.turn-group{
+  font-family:'Orbitron',monospace;
+  font-size:18px;color:var(--gold);
+  text-shadow:var(--glow-gold);
+  margin-top:4px;
+}
+
+/* ─── RANKING ─── */
+#ranking{display:none;text-align:center;z-index:5;}
+.ranking-wrap{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:24px;padding:40px 20px;
+}
+.ranking-title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(24px,4vw,40px);
+  color:var(--gold);
+  text-shadow:var(--glow-gold);
+  letter-spacing:3px;
+}
+.ranking-item{
+  display:flex;align-items:center;gap:16px;
+  background:linear-gradient(90deg,#071e34,#041527);
+  border:1px solid #1b4a7a;
+  border-radius:12px;
+  padding:14px 24px;
+  width:100%;max-width:420px;
+  transition:transform .3s ease;
+}
+.ranking-item:nth-child(1){border-color:var(--gold);box-shadow:0 0 20px #ffd70044;}
+.ranking-item:nth-child(2){border-color:#aaa;box-shadow:0 0 12px #aaaaaa22;}
+.ranking-item:nth-child(3){border-color:#cd7f32;box-shadow:0 0 12px #cd7f3222;}
+.rank-pos{
+  font-family:'Orbitron',monospace;
+  font-size:28px;min-width:40px;text-align:center;
+}
+.ranking-item:nth-child(1) .rank-pos{color:var(--gold);text-shadow:var(--glow-gold);}
+.ranking-item:nth-child(2) .rank-pos{color:#ccc;}
+.ranking-item:nth-child(3) .rank-pos{color:#cd7f32;}
+.rank-name{flex:1;font-size:18px;font-weight:700;color:#dceeff;}
+.rank-val{
+  font-family:'Orbitron',monospace;
+  font-size:15px;color:var(--green);
+  text-shadow:0 0 8px #00e67666;
+}
+
+/* ─── TEMPO ACABOU ─── */
+#tempoAcabou{
+  display:none;
+  position:absolute;inset:0;
+  align-items:center;justify-content:center;
+  z-index:50;
+  background:#00000088;
+  border-radius:16px;
+}
+.tempo-msg{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(22px,4vw,38px);
+  color:var(--red);
+  text-shadow:0 0 20px #ff1744cc,0 0 40px #ff174466;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  animation:shake .4s ease infinite alternate;
+}
+@keyframes shake{
+  0%{transform:translateX(-4px) scale(1.02);}
+  100%{transform:translateX(4px) scale(1.05);}
+}
+
+/* ─── FLASH OVERLAY ─── */
+#flash{
+  position:fixed;inset:0;pointer-events:none;z-index:100;
+  opacity:0;transition:opacity .3s ease;
+}
+#flash.show-green{background:#00e67622;opacity:1;}
+#flash.show-red{background:#ff174422;opacity:1;}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:860px){
+  #content{flex-direction:column;}
+  #sidebar{max-width:100%;}
+}
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<header>
+  <div class="header-title">🌍 Jogo do Milhão</div>
+  <div class="header-sub">Geofísica &amp; Exploração Mineral</div>
+</header>
+
+<div id="startScreen">
+  <div class="logo-ring"><span>🏆</span></div>
+  <div class="start-title">
+    JOGO DO MILHÃO
+    <span>Geofísica Aplicada</span>
+  </div>
+  <div class="start-info">
+    <div class="info-card"><div class="num">30</div><div class="lbl">Perguntas</div></div>
+    <div class="info-card"><div class="num">5</div><div class="lbl">Grupos</div></div>
+    <div class="info-card"><div class="num">30s</div><div class="lbl">Por questão</div></div>
+    <div class="info-card"><div class="num">R$5k</div><div class="lbl">Por acerto</div></div>
+  </div>
+  <button class="btn-start" onclick="iniciarJogo()">▶ INICIAR JOGO</button>
+</div>
+
+<div id="game" style="display:none;flex:1;flex-direction:column;">
+  <div id="content">
+    <div id="pergunta-area" style="position:relative;">
+      <div id="tempoAcabou"><div class="tempo-msg">⏰ Tempo Acabou!</div></div>
+      <div class="question-header">
+        <div class="q-number" id="q-num">QUESTÃO 1/30</div>
+        <div id="timer"><span class="timer-icon">⏱</span> <span id="tempo">30</span>s</div>
+      </div>
+      <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+      <div class="pergunta" id="pergunta"></div>
+      <div class="opcoes" id="opcoes"></div>
+    </div>
+
+    <div id="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">📊 Pontuação</div>
+        <div class="turn-badge">
+          <div class="turn-label">Vez do</div>
+          <div class="turn-group" id="turnLabel">Grupo 1</div>
+        </div>
+        <div id="grupos" style="margin-top:12px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="rankingScreen" style="display:none;flex:1;z-index:5;position:relative;">
+  <div class="ranking-wrap">
+    <div class="ranking-title">🏆 Ranking Final</div>
+    <div id="rankingList"></div>
+    <button class="btn-start" onclick="location.reload()" style="font-size:14px;padding:14px 40px;">↺ JOGAR NOVAMENTE</button>
+  </div>
+</div>
+
+<div id="flash"></div>
+
+<audio id="musicaFundo" loop><source src="musica_fundo.mp3" type="audio/mpeg"></audio>
+<audio id="somAcerto"><source src="acerto.mp3" type="audio/mpeg"></audio>
+<audio id="somErro"><source src="erro.mp3" type="audio/mpeg"></audio>
+<audio id="somTimer" loop><source src="timer_relogio.mp3" type="audio/mpeg"></audio>
+
+<script>
+const perguntas=[
+{q:"Os métodos geofísicos servem principalmente para:",a:["Extrair minério","Analisar propriedades físicas do subsolo","Fundir metais","Criar explosivos"],c:1},
+{q:"A sismologia estuda:",a:["Ventos","Ondas sísmicas","Magnetismo","Pressão atmosférica"],c:1},
+{q:"Ondas P são:",a:["Transversais","Superficiais","Longitudinais rápidas","Não viajam em sólidos"],c:2},
+{q:"Ondas S não passam por:",a:["Sólidos","Líquidos","Rochas","Cristais"],c:1},
+{q:"Reflexão sísmica é usada para:",a:["Medir temperatura","Mapear subsolo","Calcular chuva","Criar energia"],c:1},
+{q:"Equipamento que registra ondas sísmicas:",a:["Termômetro","Sismógrafo","Radar","Barômetro"],c:1},
+{q:"Método gravimétrico mede:",a:["Temperatura","Densidade","Campo gravitacional","Luz"],c:2},
+{q:"Magnetometria mede:",a:["Magnetismo","Som","Calor","Pressão"],c:0},
+{q:"Geofísica ajuda na:",a:["Exploração mineral","Plantação","Educação física","Meteorologia"],c:0},
+{q:"O subsolo pode ser estudado sem:",a:["Perfuração direta","Computadores","Mapas","Satélites"],c:0},
+{q:"Ondas sísmicas se propagam através:",a:["Apenas ar","Apenas água","Materiais da Terra","Somente metais"],c:2},
+{q:"Métodos geofísicos são usados na:",a:["Mineração","Arquitetura","Medicina","Biologia"],c:0},
+{q:"Campo magnético da Terra pode revelar:",a:["Minérios","Temperatura","Nuvens","Água da chuva"],c:0},
+{q:"Anomalias gravimétricas indicam:",a:["Mudanças de densidade","Mudança climática","Som","Pressão"],c:0},
+{q:"Sismógrafos registram:",a:["Vento","Terremotos","Calor","Magnetismo"],c:1},
+{q:"Geofísica também é usada em:",a:["Petróleo","Moda","Cinema","Futebol"],c:0},
+{q:"Refração sísmica mede:",a:["Mudança de velocidade das ondas","Som do vento","Temperatura do solo","Cor das rochas"],c:0},
+{q:"Exploração mineral procura:",a:["Água salgada","Minérios","Madeira","Plantas"],c:1},
+{q:"Minérios metálicos podem gerar:",a:["Anomalias magnéticas","Chuva","Vento","Som"],c:0},
+{q:"Geofísica reduz:",a:["Custos de exploração","Chuva","Luz solar","Clima"],c:0},
+{q:"Perfuração é usada após:",a:["Estudo geofísico","Tempestade","Colheita","Transporte"],c:0},
+{q:"Métodos geofísicos são:",a:["Indiretos","Diretos","Químicos","Biológicos"],c:0},
+{q:"Sismologia também ajuda a estudar:",a:["Interior da Terra","Animais","Plantas","Vento"],c:0},
+{q:"Geofísica usa:",a:["Sensores","Tintas","Motores","Câmeras"],c:0},
+{q:"Exploração geofísica ocorre:",a:["Antes da mineração","Depois da mineração","Durante festa","Após colheita"],c:0},
+{q:"Campo gravitacional varia por:",a:["Diferença de massa","Som","Luz","Vento"],c:0},
+{q:"Métodos geofísicos ajudam a:",a:["Localizar recursos naturais","Cozinhar","Construir casas","Fazer roupas"],c:0},
+{q:"Dados geofísicos são:",a:["Interpretados por especialistas","Ignorados","Jogados fora","Usados para música"],c:0},
+{q:"A geofísica combina:",a:["Física e geologia","Química e música","História e arte","Cinema e teatro"],c:0},
+{q:"Objetivo da geofísica:",a:["Entender estrutura da Terra","Criar jogos","Fazer comida","Construir carros"],c:0}
+];
+
+const LABELS=['A','B','C','D'];
+let perguntaIndex=0,grupoAtual=0,pontuacao=[0,0,0,0,0],tempo=30,timer;
+
+const musica=document.getElementById("musicaFundo");
+const acerto=document.getElementById("somAcerto");
+const erro=document.getElementById("somErro");
+const somTimer=document.getElementById("somTimer");
+musica.volume=0.2;
+somTimer.volume=0.08;
+
+document.addEventListener('click',function startMusic(){
+  musica.play().catch(()=>{});
+  document.removeEventListener('click',startMusic);
+},{once:true});
+
+function flash(type){
+  const el=document.getElementById("flash");
+  el.className='show-'+type;
+  setTimeout(()=>el.className='',600);
+}
+
+function iniciarJogo(){
+  document.getElementById("startScreen").style.display="none";
+  const g=document.getElementById("game");
+  g.style.display="flex";
+  carregarPergunta();
+}
+
+function atualizarGrupos(){
+  const g=document.getElementById("grupos");
+  g.innerHTML="";
+  document.getElementById("turnLabel").textContent="Grupo "+(grupoAtual+1);
+  pontuacao.forEach((p,i)=>{
+    const div=document.createElement("div");
+    div.className="grupo"+(i===grupoAtual?" ativo":"");
+    div.innerHTML=`<div class="grupo-dot"></div><span class="grupo-name">Grupo ${i+1}</span><span class="grupo-score">R$${p.toLocaleString()}</span>`;
+    g.appendChild(div);
+  });
+}
+
+function mostrarRanking(){
+  document.getElementById("game").style.display="none";
+  const rs=document.getElementById("rankingScreen");
+  rs.style.display="flex";
+  const medals=['🥇','🥈','🥉','4º','5º'];
+  const sorted=pontuacao.map((p,i)=>({grupo:i+1,p})).sort((a,b)=>b.p-a.p);
+  const list=document.getElementById("rankingList");
+  list.innerHTML="";
+  sorted.forEach((x,idx)=>{
+    const div=document.createElement("div");
+    div.className="ranking-item";
+    div.style.animationDelay=(idx*0.1)+"s";
+    div.innerHTML=`<div class="rank-pos">${medals[idx]}</div><div class="rank-name">Grupo ${x.grupo}</div><div class="rank-val">R$ ${x.p.toLocaleString()}</div>`;
+    list.appendChild(div);
+  });
+}
+
+function carregarPergunta(){
+  if(perguntaIndex>=30){mostrarRanking();return;}
+
+  tempo=30;
+  document.getElementById("tempo").innerText=tempo;
+  document.getElementById("tempo").className='';
+  document.getElementById("q-num").textContent="QUESTÃO "+(perguntaIndex+1)+"/30";
+  document.getElementById("progressBar").style.width=((perguntaIndex/30)*100)+"%";
+
+  clearInterval(timer);
+  somTimer.currentTime=0;
+  somTimer.play().catch(()=>{});
+  timer=setInterval(()=>{
+    tempo--;
+    const el=document.getElementById("tempo");
+    el.innerText=tempo;
+    if(tempo<=10)el.className='danger';
+    if(tempo<=0){
+      clearInterval(timer);
+      somTimer.pause();somTimer.currentTime=0;
+      // mostrar aviso
+      const ta=document.getElementById("tempoAcabou");
+      ta.style.display="flex";
+      flash('red');
+      setTimeout(()=>{
+        ta.style.display="none";
+        grupoAtual=(grupoAtual+1)%5;
+        perguntaIndex++;
+        carregarPergunta();
+      },1800);
+    }
+  },1000);
+
+  const p=perguntas[perguntaIndex];
+  document.getElementById("pergunta").innerText=p.q;
+
+  const op=document.getElementById("opcoes");
+  op.innerHTML="";
+  p.a.forEach((alt,i)=>{
+    const btn=document.createElement("button");
+    btn.innerHTML=`<span class="alt-label">${LABELS[i]}</span>${alt}`;
+    btn.onclick=()=>{
+      clearInterval(timer);
+      somTimer.pause();somTimer.currentTime=0;
+      const btns=op.querySelectorAll("button");
+      btns.forEach(b=>b.onclick=null);
+      if(i===p.c){
+        btn.classList.add('correct');
+        flash('green');
+        acerto.currentTime=0;acerto.play().catch(()=>{});
+        pontuacao[grupoAtual]+=5000;
+      }else{
+        btn.classList.add('wrong');
+        btns[p.c].classList.add('correct');
+        flash('red');
+        erro.currentTime=0;erro.play().catch(()=>{});
+      }
+      atualizarGrupos();
+      setTimeout(()=>{
+        grupoAtual=(grupoAtual+1)%5;
+        perguntaIndex++;
+        carregarPergunta();
+      },2200);
+    };
+    op.appendChild(btn);
+  });
+
+  atualizarGrupos();
+}
+</script>
+</body>
+</html>
